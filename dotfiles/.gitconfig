@@ -1,0 +1,32 @@
+[user]
+  name = Damien Caselli
+[core]
+  editor = vim
+[rerere]
+  enabled = true
+[color]
+  ui = true
+[alias]
+  st = status
+  co = checkout
+  ba = branch -v -a
+  nlog = log --name-status
+  glog = log --graph --abbrev-commit
+  sglog = log --graph --abbrev-commit --pretty=oneline
+  slog = log --pretty=oneline --abbrev-commit
+  dlog = log -p
+  relog = log --graph --abbrev-commit --pretty=oneline --no-merges
+  flog = log --decorate=short
+  changelog = log --graph --abbrev-commit --pretty=oneline --no-merges
+  br = branch -v
+  ru = remote update
+  su = submodule update
+  si = submodule init
+  lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
+[color]
+  ui = auto
+  status = auto
+  branch = auto
+  diff = auto
+[merge]
+  summary = true

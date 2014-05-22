@@ -1,0 +1,8 @@
+termcapinfo xterm ti@:te@
+altscreen on
+autodetach on
+defscrollback 1000
+startup_message off
+hardstatus alwayslastline "%{= 9r}%H %{= .c}load : %l%-24=%{= .m}%D %d.%m.%Y %c:%s "
+caption always "%{kG}%?%-Lw%?%{bw}%n*%f %t%?(%u)%?%{kG}%?%+Lw%?"
+termcapinfo xterm* ti@:te@
