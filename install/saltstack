@@ -1,0 +1,56 @@
+#!/bin/bash
+#
+# Perform interactive install of SaltStack
+
+install_type=""
+separator="\033[35m===>\033[0m"
+
+echo -e "${separator} add SaltStack PPA"
+
+if grep ^ /etc/apt/sources.list /etc/apt/sources.list.d/* | grep saltstack > /dev/null; then
+  echo "SaltStack PPA is already in sources list"
+else
+  add-apt-repository -y ppa:saltstack/salt
+fi
+
+apt-get update
+
+echo -e "${separator} Choose SaltStack behavior:"
+
+options=("salt-master" "salt-minion")
+PS3="pick a behavior: "
+select opt in "${options[@]}"
+do
+  case "${REPLY}" in
+    1)
+      install_type="${opt}"
+      break
+      ;;
+    2)
+      install_type="${opt}"
+      break
+      ;;
+    *)
+      echo "Unexpected option ${REPLY}"
+      echo "Installation aborted" >&2
+      exit 1
+      ;;
+  esac
+done
+
+echo -e "${separator} install ${install_type}"
+
+apt-get install ${install_type} -y
+
+echo -e "${separator} add ${install_type} service to update-rc.d"
+
+update-rc.d ${install_type} defaults
+
+echo -e "${separator} start ${install_type}"
+
+if ps ax | grep -v grep | grep ${install_type} > /dev/null; then
+  echo "${install_type} is running"
+else
+  echo "starting ${install_type}"
+  service ${install_type} start
+fi
