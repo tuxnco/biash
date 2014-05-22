@@ -1,5 +1,6 @@
 [user]
   name = Damien Caselli
+  email = damien.caselli@gmail.com
 [core]
   editor = vim
 [rerere]
