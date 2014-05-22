@@ -19,18 +19,17 @@ echo -e "${separator} Choose SaltStack behavior:"
 
 options=("salt-master" "salt-minion")
 PS3="pick a behavior: "
-select opt in "${options[@]}"
-do
+select opt in "${options[@]}"; do
   case "${REPLY}" in
-    1)
+    1 )
       install_type="${opt}"
       break
       ;;
-    2)
+    2 )
       install_type="${opt}"
       break
       ;;
-    *)
+    * )
       echo "Unexpected option ${REPLY}"
       echo "Installation aborted" >&2
       exit 1
