@@ -2,8 +2,47 @@
 #
 # Perform interactive install of SaltStack
 
+__ScriptName="salt_install"
 install_type=""
 separator="\033[35m===>\033[0m"
+
+usage() {
+  cat << EOT
+
+  Usage :  ${__ScriptName} [options] <install-type>
+
+  Installation types:
+    - salt-master
+    - salt-minion
+
+  Examples:
+    - ${__ScriptName} -r salt-master
+
+  Options:
+  -h  Display this message
+  -r  Set role
+
+EOT
+}
+
+while getopts "hr:" option
+do
+  case "${option}" in
+    h)
+      usage
+      exit 0
+      ;;
+    r)
+      if [[ $OPTARG == "salt-master" ]] || [[ $OPTARG == "salt-minion" ]]; then
+        install_type="${OPTARG}"
+        break
+      else
+        echo "Role must be 'salt-master' or 'salt-minion'"
+        exit 1
+      fi
+      ;;
+  esac
+done
 
 echo -e "${separator} add SaltStack PPA"
 
@@ -14,28 +53,6 @@ else
 fi
 
 apt-get update
-
-echo -e "${separator} Choose SaltStack behavior:"
-
-options=("salt-master" "salt-minion")
-PS3="pick a behavior: "
-select opt in "${options[@]}"; do
-  case "${REPLY}" in
-    1 )
-      install_type="${opt}"
-      break
-      ;;
-    2 )
-      install_type="${opt}"
-      break
-      ;;
-    * )
-      echo "Unexpected option ${REPLY}"
-      echo "Installation aborted" >&2
-      exit 1
-      ;;
-  esac
-done
 
 echo -e "${separator} install ${install_type}"
 
