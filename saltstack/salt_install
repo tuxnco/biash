@@ -3,7 +3,7 @@
 # Perform interactive install of SaltStack
 
 __ScriptName="salt_install"
-install_type=""
+install_type="salt-minion"
 salt_master=""
 minion_id=""
 separator="\033[35m===>\033[0m"
@@ -30,7 +30,7 @@ usage() {
 EOT
 }
 
-while getopts "hrmi:" option
+while getopts "hr:m:i:" option
 do
   case "${option}" in
     h)
@@ -40,10 +40,6 @@ do
     r)
       if [[ $OPTARG == "salt-master" ]] || [[ $OPTARG == "salt-minion" ]]; then
         install_type="${OPTARG}"
-        break
-      else
-        echo "Role must be 'salt-master' or 'salt-minion'"
-        exit 1
       fi
       ;;
     m)
@@ -74,7 +70,7 @@ echo -e "${separator} add ${install_type} service to update-rc.d"
 update-rc.d ${install_type} defaults
 
 if [[ ${install_type} -eq "salt-minion" ]]; then
-  if [[ ${salt_master} -neq "" ]]; then
+  if [[ ${salt_master} != "" ]]; then
     echo -e "${separator} setting salt-minion's master to ${salt_master}"
 
     [ ! -d ${salt_etc_dir}/minion.d ] && mkdir -p ${salt_etc_dir}/minion.d
@@ -82,16 +78,19 @@ if [[ ${install_type} -eq "salt-minion" ]]; then
     cat <<_eof > ${salt_etc_dir}/minion.d/99-master-address.conf
 master: ${salt_master}
 _eof
-
+  else
+    echo -e "${separator} minion's master not set"
   fi
 
-  if [[ ${minion_id} -neq "" ]]; then
-    echo -e "${separator} salt-minion's id to ${minion_id}"
+  if [[ ${minion_id} != "" ]]; then
+    echo -e "${separator} setting salt-minion's id to ${minion_id}"
 
-    [ ! -d ${salt_etc_dir} ] && mkdir -p ${salt_etc_dir
-    echo ${minion_id} > ${salt_etc_dir}/minion_id}
+    [ ! -d ${salt_etc_dir} ] && mkdir -p ${salt_etc_dir}
+    echo ${minion_id} > ${salt_etc_dir}/minion_id
+  else
+    echo -e "${separator} minion's id not set"
   fi
-fi}
+fi
 
 echo -e "${separator} start ${install_type}"
 
